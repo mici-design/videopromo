@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Promo Video 9:16 - Campanelli d'allarme</title>
+    <!-- Caricamento Tailwind CSS per layout e controlli esterni -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Caricamento Tone.js per effetti sonori sintetizzati (notifica, click, battito) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+    <!-- Google Fonts identici alla web app originale -->
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,700;0,800;1,400&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg: #171320;
+            --panel: #282033;
+            --card: #30263c;
+            --pink: #e8a1b3;
+            --red: #b94c70;
+            --white: #fff4f5;
+            --muted: #c5b5c6;
+            --green: #397d63;
+            --green-light: #73c6a2;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+        }
+
+        body {
+            background-color: #0d0a12;
+            color: var(--white);
+            font-family: 'DM Sans', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+        }
+
+        /* Contenitore 9:16 perfetto per Reels / Stories / Screen Recording */
+        .video-stage {
+            position: relative;
+            width: 100%;
+            max-width: 405px; /* Proporzione 9:16 su 720px di altezza */
+            height: 720px;
+            max-height: 88vh;
+            aspect-ratio: 9 / 16;
+            background: 
+                radial-gradient(circle at 15% 20%, #75425b66, transparent 45%),
+                radial-gradient(circle at 85% 80%, #533c7566, transparent 45%),
+                var(--bg);
+            border-radius: 28px;
+            overflow: hidden;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.85), 0 0 0 1px rgba(232, 161, 179, 0.2);
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Su mobile occupa tutto lo schermo */
+        @media (max-width: 480px) {
+            .video-stage {
+                max-width: 100vw;
+                height: 100dvh;
+                max-height: 100dvh;
+                border-radius: 0;
+                box-shadow: none;
+            }
+            .controls-bar {
+                position: fixed;
+                bottom: 12px;
+                z-index: 50;
+                background: rgba(23, 19, 32, 0.85);
+                backdrop-filter: blur(10px);
+                padding: 8px 14px;
+                border-radius: 999px;
+                border: 1px solid rgba(255,255,255,0.15);
+            }
+        }
+
+        /* Modalità schermo intero pulita per registrazione */
+        body.recording-mode .controls-bar,
+        body.recording-mode .header-info {
+            display: none !important;
+        }
+        body.recording-mode .video-stage {
+            max-height: 96vh;
+            height: 96vh;
+        }
+
+        /* Particelle fluttuanti identiche all'app */
+        .particle {
+            position: absolute;
+            color: rgba(232, 161, 179, 0.35);
+            pointer-events: none;
+            animation: rise linear infinite;
+            z-index: 1;
+        }
+
+        @keyframes rise {
+            0% { transform: translateY(750px) rotate(0deg); opacity: 0; }
+            15% { opacity: 1; }
+            85% { opacity: 1; }
+            100% { transform: translateY(-50px) rotate(360deg); opacity: 0; }
+        }
+
+        /* Barre progresso stile Storia IG */
+        .ig-progress-container {
+            position: absolute;
+            top: 14px;
+            left: 14px;
+            right: 14px;
+            display: flex;
+            gap: 6px;
+            z-index: 30;
+        }
+
+        .ig-segment {
+            flex: 1;
+            height: 3.5px;
+            background: rgba(255, 244, 245, 0.22);
+            border-radius: 4px;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .ig-segment-fill {
+            height: 100%;
+            width: 0%;
+            background: var(--white);
+            border-radius: 4px;
+            transition: width 0.05s linear;
+        }
+
+        /* Header discreto interno al video */
+        .ig-header {
+            position: absolute;
+            top: 26px;
+            left: 16px;
+            right: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 30;
+        }
+
+        .brand-pill {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            color: var(--white);
+            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+        }
+
+        .brand-dot {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #d77896, #a64a73);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            box-shadow: 0 0 12px rgba(215, 120, 150, 0.6);
+        }
+
+        /* Scene */
+        .scene {
+            position: absolute;
+            inset: 0;
+            padding: 70px 24px 36px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            z-index: 10;
+            opacity: 0;
+            pointer-events: none;
+            transform: scale(0.96);
+            transition: opacity 0.45s cubic-bezier(0.22, 1, 0.36, 1), transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .scene.active {
+            opacity: 1;
+            pointer-events: auto;
+            transform: scale(1);
+        }
+
+        .serif {
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* --- SCENA 1: HOOK NOTIFICA --- */
+        .notification-stack {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 28px;
+        }
+
+        .notif-card {
+            background: rgba(48, 38, 60, 0.92);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(232, 161, 179, 0.35);
+            border-radius: 18px;
+            padding: 14px 16px;
+            text-align: left;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.45);
+            opacity: 0;
+            transform: translateY(-25px) scale(0.92);
+        }
+
+        .notif-card.pop {
+            animation: popNotif 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        .notif-card.shake {
+            animation: popNotif 0.4s forwards, phoneVibrate 0.4s 0.45s ease-in-out;
+        }
+
+        @keyframes popNotif {
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        @keyframes phoneVibrate {
+            0%, 100% { transform: translateX(0); }
+            20% { transform: translateX(-6px) rotate(-1deg); }
+            40% { transform: translateX(6px) rotate(1deg); }
+            60% { transform: translateX(-4px); }
+            80% { transform: translateX(4px); }
+        }
+
+        .hook-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 32px;
+            line-height: 1.15;
+            font-weight: 700;
+            color: var(--white);
+            opacity: 0;
+            transform: translateY(15px);
+            transition: all 0.5s ease;
+        }
+
+        .hook-title.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .highlight-pink {
+            color: var(--pink);
+            font-style: italic;
+        }
+
+        /* --- PERSONAGGIO CSS IDENTICO ALL'APP --- */
+        .character-wrapper {
+            position: relative;
+            width: 140px;
+            height: 170px;
+            margin: 0 auto 14px;
+            animation: floatChar 3.5s ease-in-out infinite;
+        }
+
+        .char-hair {
+            width: 118px;
+            height: 132px;
+            background: #392638;
+            border-radius: 50% 50% 35% 35%;
+            position: absolute;
+            left: 11px;
+            top: 4px;
+            z-index: 1;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+        }
+
+        .char-face {
+            width: 104px;
+            height: 118px;
+            background: #eab59f;
+            border-radius: 48% 48% 45% 45%;
+            position: absolute;
+            left: 18px;
+            top: 14px;
+            z-index: 2;
+        }
+
+        .char-eyes {
+            position: absolute;
+            top: 52px;
+            left: 34px;
+            display: flex;
+            gap: 30px;
+            z-index: 3;
+        }
+
+        .char-eyes span {
+            background: #35232b;
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            animation: blink 4s infinite;
+        }
+
+        @keyframes blink {
+            0%, 96%, 100% { transform: scaleY(1); }
+            98% { transform: scaleY(0.1); }
+        }
+
+        .char-mouth {
+            position: absolute;
+            top: 80px;
+            left: 49px;
+            width: 22px;
+            height: 10px;
+            border-bottom: 2px solid #914e5b;
+            border-radius: 50%;
+            z-index: 3;
+            transition: all 0.4s ease;
+        }
+
+        .char-mouth.sad {
+            border-bottom: none;
+            border-top: 2px solid #914e5b;
+            top: 84px;
+        }
+
+        .char-neck {
+            position: absolute;
+            width: 32px;
+            height: 36px;
+            background: #eab59f;
+            left: 54px;
+            top: 118px;
+            z-index: 1;
+        }
+
+        .char-dress {
+            position: absolute;
+            top: 136px;
+            left: 14px;
+            width: 112px;
+            height: 68px;
+            background: #a44f70;
+            border-radius: 36px 36px 12px 12px;
+            z-index: 2;
+        }
+
+        @keyframes floatChar {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* --- SCENA 2: TENSIONE & PAROLE CHIAVE --- */
+        .keywords-ticker {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px;
+            margin: 16px 0 22px;
+        }
+
+        .kw-pill {
+            background: rgba(185, 76, 112, 0.25);
+            border: 1px solid rgba(232, 161, 179, 0.4);
+            color: #f2a8bd;
+            padding: 6px 13px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 1.2px;
+            opacity: 0.25;
+            transform: scale(0.92);
+            transition: all 0.25s ease;
+        }
+
+        .kw-pill.lit {
+            opacity: 1;
+            transform: scale(1.08);
+            background: var(--red);
+            color: var(--white);
+            box-shadow: 0 0 20px rgba(185, 76, 112, 0.75);
+        }
+
+        /* --- SCENA 3: SIMULAZIONE QUIZ INTERATTIVO --- */
+        .quiz-mockup {
+            width: 100%;
+            background: linear-gradient(145deg, #30263c, #211b2b);
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            border-radius: 22px;
+            padding: 20px 18px;
+            text-align: left;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+            position: relative;
+        }
+
+        .mock-option {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            border-radius: 13px;
+            padding: 12px 14px;
+            font-size: 13px;
+            line-height: 1.4;
+            color: var(--white);
+            margin-top: 10px;
+            transition: all 0.35s ease;
+            position: relative;
+        }
+
+        .mock-option.selected-correct {
+            background: rgba(57, 125, 99, 0.35);
+            border-color: var(--green-light);
+            transform: scale(1.02);
+            box-shadow: 0 0 20px rgba(115, 198, 162, 0.25);
+        }
+
+        .mock-option.dimmed {
+            opacity: 0.45;
+        }
+
+        .mock-feedback {
+            margin-top: 12px;
+            background: rgba(115, 198, 162, 0.14);
+            border-left: 3px solid var(--green-light);
+            padding: 10px 12px;
+            border-radius: 8px;
+            font-size: 12.5px;
+            line-height: 1.45;
+            color: var(--white);
+            opacity: 0;
+            transform: translateY(8px);
+            transition: all 0.4s ease;
+        }
+
+        .mock-feedback.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Cursore/Tocco animato */
+        .touch-cursor {
+            position: absolute;
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: rgba(255, 244, 245, 0.35);
+            border: 2px solid var(--white);
+            box-shadow: 0 0 15px rgba(232, 161, 179, 0.8);
+            pointer-events: none;
+            z-index: 25;
+            right: 25px;
+            bottom: 20px;
+            opacity: 0;
+            transition: all 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .touch-cursor::after {
+            content: '👆';
+            position: absolute;
+            font-size: 20px;
+            top: 8px;
+            left: 8px;
+        }
+
+        .touch-cursor.tap-pulse {
+            transform: scale(0.75);
+            background: rgba(232, 161, 179, 0.8);
+        }
+
+        /* --- SCENA 4: CALL TO ACTION FINALE --- */
+        .heart-pulse {
+            font-size: 58px;
+            animation: heartbeat 1.2s infinite;
+            filter: drop-shadow(0 0 20px rgba(232, 161, 179, 0.5));
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            25% { transform: scale(1.18); }
+            45% { transform: scale(1.04); }
+            65% { transform: scale(1.22); }
+        }
+
+        /* Adesivo Link stile Instagram Stories */
+        .ig-link-sticker {
+            margin-top: 22px;
+            background: var(--white);
+            color: #171320;
+            padding: 14px 24px;
+            border-radius: 16px;
+            font-weight: 800;
+            font-size: 16px;
+            letter-spacing: 0.4px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 12px 35px rgba(232, 161, 179, 0.45);
+            animation: stickerBounce 2s infinite;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .ig-link-icon {
+            background: linear-gradient(135deg, #d77896, #a64a73);
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        @keyframes stickerBounce {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-6px) scale(1.04); }
+        }
+
+        .helpline-badge {
+            margin-top: 20px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            border-radius: 14px;
+            padding: 10px 16px;
+            font-size: 12px;
+            color: var(--muted);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Intestazione esterna per chi registra/usa il promo -->
+    <div class="header-info text-center mb-3 px-4 hidden sm:block">
+        <span class="text-xs uppercase tracking-widest text-[#e8a1b3] font-bold">Anteprima Video Verticale 9:16 · Reels &amp; TikTok</span>
+    </div>
+
+    <!-- STAGE VIDEO 9:16 -->
+    <main class="video-stage" id="videoStage">
+        
+        <!-- Particelle fluttuanti di sfondo -->
+        <div id="particles"></div>
+
+        <!-- Barre di avanzamento stile Storia Instagram -->
+        <div class="ig-progress-container">
+            <div class="ig-segment" onclick="jumpToScene(0)"><div class="ig-segment-fill" id="prog-0"></div></div>
+            <div class="ig-segment" onclick="jumpToScene(1)"><div class="ig-segment-fill" id="prog-1"></div></div>
+            <div class="ig-segment" onclick="jumpToScene(2)"><div class="ig-segment-fill" id="prog-2"></div></div>
+            <div class="ig-segment" onclick="jumpToScene(3)"><div class="ig-segment-fill" id="prog-3"></div></div>
+        </div>
+
+        <!-- Header Storia -->
+        <div class="ig-header">
+            <div class="brand-pill">
+                <div class="brand-dot">🔔</div>
+                <span>CAMPANELLI D'ALLARME</span>
+            </div>
+            <button id="audioToggleBtn" onclick="toggleAudio()" class="text-xs bg-white/10 hover:bg-white/20 text-white px-2.5 py-1 rounded-full backdrop-blur-md border border-white/20 transition">
+                🔇 Audio Off
+            </button>
+        </div>
+
+        <!-- ==========================================
+             SCENA 1: HOOK D'IMPATTO (0 - 4.5s)
+             ========================================== -->
+        <section class="scene active" id="scene-0">
+            <div class="notification-stack">
+                <div class="notif-card" id="notif-1">
+                    <div class="flex items-center justify-between text-[11px] text-[#e8a1b3] font-bold mb-1">
+                        <span>💬 MESSAGGIO · ORA</span>
+                        <span>3 non letti</span>
+                    </div>
+                    <p class="text-sm text-white font-medium">«Dove sei? Perché non rispondi subito?»</p>
+                </div>
+
+                <div class="notif-card" id="notif-2">
+                    <div class="flex items-center justify-between text-[11px] text-[#e8a1b3] font-bold mb-1">
+                        <span>💬 MESSAGGIO · ADESSO</span>
+                        <span>Urgente</span>
+                    </div>
+                    <p class="text-sm text-white font-medium">«Con chi stai uscendo? Mandami la posizione.»</p>
+                </div>
+            </div>
+
+            <h1 class="hook-title" id="hook-text">
+                È amore...<br>
+                <span class="highlight-pink">o è un campanello d'allarme?</span>
+            </h1>
+        </section>
+
+        <!-- ==========================================
+             SCENA 2: TENSIONE & CONSAPEVOLEZZA (4.5 - 9s)
+             ========================================== -->
+        <section class="scene" id="scene-1">
+            <div class="character-wrapper">
+                <div class="char-hair"></div>
+                <div class="char-face"></div>
+                <div class="char-eyes"><span></span><span></span></div>
+                <div class="char-mouth sad"></div>
+                <div class="char-neck"></div>
+                <div class="char-dress"></div>
+            </div>
+
+            <div class="keywords-ticker" id="keywordsBox">
+                <span class="kw-pill" data-kw="0">CONTROLLO</span>
+                <span class="kw-pill" data-kw="1">ISOLAMENTO</span>
+                <span class="kw-pill" data-kw="2">GELOSIA</span>
+                <span class="kw-pill" data-kw="3">RICATTO EMOTIVO</span>
+            </div>
+
+            <h2 class="serif text-2xl sm:text-3xl font-bold leading-tight text-[#fff4f5] mb-3">
+                La violenza non inizia sempre con uno schiaffo.
+            </h2>
+            <p class="text-sm text-[#c5b5c6] leading-relaxed max-w-xs">
+                A volte comincia con un divieto presentato come protezione.
+            </p>
+        </section>
+
+        <!-- ==========================================
+             SCENA 3: ANTEPRIMA INTERATTIVA QUIZ (9 - 14.5s)
+             ========================================== -->
+        <section class="scene" id="scene-2">
+            <span class="inline-block bg-[#b94c70]/30 text-[#f2a8bd] text-[11px] font-bold tracking-widest px-3 py-1 rounded-full mb-3 border border-[#e8a1b3]/30">
+                METTITI ALLA PROVA · 1 MINUTO
+            </span>
+
+            <h2 class="serif text-2xl font-bold text-white mb-4">
+                Sai riconoscere i segnali?
+            </h2>
+
+            <div class="quiz-mockup">
+                <div class="text-[10px] uppercase tracking-widest text-[#e8a1b3] font-bold mb-1">
+                    SITUAZIONE 3 DI 5 · PRIVACY
+                </div>
+                <div class="serif text-base font-semibold text-white leading-snug mb-3">
+                    «Il partner pretende le password dei social. È accettabile?»
+                </div>
+
+                <div class="mock-option" id="opt-wrong">
+                    Sì, se non hai niente da nascondere.
+                </div>
+
+                <div class="mock-option" id="opt-right">
+                    No. La privacy e i confini personali restano importanti.
+                </div>
+
+                <div class="mock-feedback" id="mock-fb">
+                    <strong class="text-[#73c6a2]">✓ Hai individuato il segnale.</strong><br>
+                    L'affetto non dà mai diritto alla sorveglianza.
+                </div>
+
+                <!-- Cursore animato che simula il tap -->
+                <div class="touch-cursor" id="touchCursor"></div>
+            </div>
+        </section>
+
+        <!-- ==========================================
+             SCENA 4: CALL TO ACTION FINALE (14.5 - 19.5s)
+             ========================================== -->
+        <section class="scene" id="scene-3">
+            <span class="inline-block bg-[#b94c70]/30 text-[#f2a8bd] text-[11px] font-bold tracking-widest px-3 py-1 rounded-full mb-4">
+                25 NOVEMBRE · CONSAPEVOLEZZA
+            </span>
+
+            <div class="heart-pulse mb-3">💗</div>
+
+            <h1 class="serif text-4xl font-bold text-white leading-tight mb-3">
+                L'amore<br><span class="text-[#e8a1b3] italic">lascia libere.</span>
+            </h1>
+
+            <p class="text-sm text-[#c5b5c6] max-w-[280px] leading-relaxed">
+                Fai il percorso interattivo gratuito e anonimo per riconoscere i campanelli d'allarme.
+            </p>
+
+            <!-- Adesivo Link stile Instagram -->
+            <div class="ig-link-sticker" onclick="restartVideo()">
+                <span class="ig-link-icon">🔗</span>
+                <span>FAI IL TEST ORA →</span>
+            </div>
+
+            <div class="helpline-badge">
+                Numero Antiviolenza e Stalking: <strong class="text-[#e8a1b3] text-sm">1522</strong> (24h gratuito)
+            </div>
+        </section>
+
+    </main>
+
+    <!-- CONTROLLI ESTERNI PER GESTIONE / REGISTRAZIONE -->
+    <div class="controls-bar mt-4 flex flex-wrap items-center justify-center gap-2 px-3">
+        <button onclick="togglePlay()" id="playPauseBtn" class="bg-[#282033] hover:bg-[#382d47] text-white text-xs font-bold px-4 py-2.5 rounded-full border border-white/15 transition flex items-center gap-1.5">
+            ⏸ Pausa
+        </button>
+        <button onclick="restartVideo()" class="bg-[#282033] hover:bg-[#382d47] text-white text-xs font-bold px-4 py-2.5 rounded-full border border-white/15 transition">
+            ↺ Riavvia
+        </button>
+        <button onclick="toggleRecordingMode()" class="bg-gradient-to-r from-[#d77896] to-[#a64a73] hover:opacity-90 text-white text-xs font-bold px-4 py-2.5 rounded-full shadow-lg transition" title="Nasconde i pulsanti per registrare lo schermo in modo pulito">
+            🎥 Modalità Registra (Esc per uscire)
+        </button>
+    </div>
+
+    <script>
+        /* --- GENERAZIONE PARTICELLE DI SFONDO --- */
+        const particleContainer = document.getElementById("particles");
+        const symbols = ["✦", "✧", "♡", "·"];
+        for (let i = 0; i < 22; i++) {
+            const p = document.createElement("div");
+            p.className = "particle";
+            p.innerText = symbols[i % symbols.length];
+            p.style.left = Math.random() * 95 + "%";
+            p.style.animationDuration = (7 + Math.random() * 9) + "s";
+            p.style.animationDelay = (Math.random() * 6) + "s";
+            p.style.fontSize = (12 + Math.random() * 16) + "px";
+            particleContainer.appendChild(p);
+        }
+
+        /* --- SINTETIZZATORE AUDIO OPZIONALE (TONE.JS) --- */
+        let audioEnabled = false;
+        let synth = null;
+
+        async function toggleAudio() {
+            const btn = document.getElementById("audioToggleBtn");
+            if (!audioEnabled) {
+                await Tone.start();
+                synth = new Tone.PolySynth(Tone.Synth, {
+                    oscillator: { type: "sine" },
+                    envelope: { attack: 0.02, decay: 0.2, sustain: 0.1, release: 0.8 }
+                }).toDestination();
+                synth.volume.value = -10;
+                audioEnabled = true;
+                btn.innerText = "🔊 Audio On";
+                btn.classList.add("bg-[#b94c70]/40", "border-[#e8a1b3]");
+                playSound("notif");
+            } else {
+                audioEnabled = false;
+                btn.innerText = "🔇 Audio Off";
+                btn.classList.remove("bg-[#b94c70]/40", "border-[#e8a1b3]");
+            }
+        }
+
+        function playSound(type) {
+            if (!audioEnabled || !synth) return;
+            try {
+                const now = Tone.now();
+                if (type === "notif") {
+                    synth.triggerAttackRelease(["E5", "B5"], "16n", now);
+                } else if (type === "keyword") {
+                    synth.triggerAttackRelease("C3", "32n", now);
+                } else if (type === "success") {
+                    synth.triggerAttackRelease(["C5", "E5", "G5"], "8n", now);
+                } else if (type === "heart") {
+                    synth.triggerAttackRelease("G2", "8n", now);
+                }
+            } catch (e) {}
+        }
+
+        /* --- TIMELINE E GESTIONE SCENE --- */
+        // Durata in millisecondi di ciascuna delle 4 scene (Totale: 19.5 secondi)
+        const sceneDurations = [4500, 4500, 5500, 5000];
+        let currentScene = 0;
+        let sceneElapsed = 0;
+        let isPlaying = true;
+        let lastFrameTime = performance.now();
+
+        // Flag per evitare trigger ripetuti all'interno della stessa scena
+        let triggers = {};
+
+        function resetSceneAnimations(sceneIdx) {
+            triggers = {};
+            if (sceneIdx === 0) {
+                const n1 = document.getElementById("notif-1");
+                const n2 = document.getElementById("notif-2");
+                const ht = document.getElementById("hook-text");
+                n1.classList.remove("pop", "shake");
+                n2.classList.remove("pop", "shake");
+                ht.classList.remove("visible");
+            } else if (sceneIdx === 1) {
+                document.querySelectorAll(".kw-pill").forEach(el => el.classList.remove("lit"));
+            } else if (sceneIdx === 2) {
+                document.getElementById("opt-right").classList.remove("selected-correct");
+                document.getElementById("opt-wrong").classList.remove("dimmed");
+                document.getElementById("mock-fb").classList.remove("show");
+                const cursor = document.getElementById("touchCursor");
+                cursor.style.opacity = "0";
+                cursor.style.transform = "translate(0, 0) scale(1)";
+                cursor.classList.remove("tap-pulse");
+            }
+        }
+
+        function switchScene(newIdx) {
+            currentScene = newIdx;
+            sceneElapsed = 0;
+            resetSceneAnimations(currentScene);
+
+            document.querySelectorAll(".scene").forEach((el, idx) => {
+                el.classList.toggle("active", idx === currentScene);
+            });
+
+            // Aggiorna le barre IG precedenti e successive
+            for (let i = 0; i < sceneDurations.length; i++) {
+                const bar = document.getElementById(`prog-${i}`);
+                if (i < currentScene) bar.style.width = "100%";
+                else if (i > currentScene) bar.style.width = "0%";
+            }
+
+            if (currentScene === 3) playSound("heart");
+        }
+
+        function runSceneChoreography(sceneIdx, t) {
+            // SCENA 1: Notifiche a cascata + Testo Hook
+            if (sceneIdx === 0) {
+                if (t > 250 && !triggers.n1) {
+                    triggers.n1 = true;
+                    document.getElementById("notif-1").classList.add("pop", "shake");
+                    playSound("notif");
+                }
+                if (t > 1300 && !triggers.n2) {
+                    triggers.n2 = true;
+                    document.getElementById("notif-2").classList.add("pop", "shake");
+                    playSound("notif");
+                }
+                if (t > 2300 && !triggers.hook) {
+                    triggers.hook = true;
+                    document.getElementById("hook-text").classList.add("visible");
+                }
+            }
+
+            // SCENA 2: Accensione ritmica parole chiave
+            if (sceneIdx === 1) {
+                const kwTimes = [400, 1100, 1800, 2500];
+                kwTimes.forEach((time, idx) => {
+                    if (t > time && !triggers[`kw${idx}`]) {
+                        triggers[`kw${idx}`] = true;
+                        const pill = document.querySelector(`.kw-pill[data-kw="${idx}"]`);
+                        if (pill) pill.classList.add("lit");
+                        playSound("keyword");
+                    }
+                });
+            }
+
+            // SCENA 3: Movimento cursore e selezione risposta corretta
+            if (sceneIdx === 2) {
+                const cursor = document.getElementById("touchCursor");
+                if (t > 1200 && !triggers.cursorShow) {
+                    triggers.cursorShow = true;
+                    cursor.style.opacity = "1";
+                    cursor.style.transform = "translate(-75px, -85px)";
+                }
+                if (t > 2100 && !triggers.cursorTap) {
+                    triggers.cursorTap = true;
+                    cursor.classList.add("tap-pulse");
+                    document.getElementById("opt-right").classList.add("selected-correct");
+                    document.getElementById("opt-wrong").classList.add("dimmed");
+                    playSound("success");
+                }
+                if (t > 2500 && !triggers.showFb) {
+                    triggers.showFb = true;
+                    cursor.classList.remove("tap-pulse");
+                    cursor.style.opacity = "0";
+                    document.getElementById("mock-fb").classList.add("show");
+                }
+            }
+        }
+
+        function animationLoop(now) {
+            const dt = now - lastFrameTime;
+            lastFrameTime = now;
+
+            if (isPlaying) {
+                sceneElapsed += dt;
+                const duration = sceneDurations[currentScene];
+                const progress = Math.min((sceneElapsed / duration) * 100, 100);
+                document.getElementById(`prog-${currentScene}`).style.width = progress + "%";
+
+                runSceneChoreography(currentScene, sceneElapsed);
+
+                if (sceneElapsed >= duration) {
+                    if (currentScene < sceneDurations.length - 1) {
+                        switchScene(currentScene + 1);
+                    } else {
+                        // Loop continuo fluido
+                        switchScene(0);
+                    }
+                }
+            }
+
+            requestAnimationFrame(animationLoop);
+        }
+
+        /* --- CONTROLLI UTENTE --- */
+        function togglePlay() {
+            isPlaying = !isPlaying;
+            const btn = document.getElementById("playPauseBtn");
+            btn.innerHTML = isPlaying ? "⏸ Pausa" : "▶ Riprendi";
+        }
+
+        function restartVideo() {
+            isPlaying = true;
+            document.getElementById("playPauseBtn").innerHTML = "⏸ Pausa";
+            switchScene(0);
+        }
+
+        function jumpToScene(idx) {
+            isPlaying = true;
+            document.getElementById("playPauseBtn").innerHTML = "⏸ Pausa";
+            switchScene(idx);
+        }
+
+        function toggleRecordingMode() {
+            document.body.classList.toggle("recording-mode");
+            restartVideo();
+        }
+
+        // Uscita dalla modalità registrazione con tasto ESC
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "Escape") {
+                document.body.classList.remove("recording-mode");
+            } else if (e.code === "Space") {
+                e.preventDefault();
+                togglePlay();
+            }
+        });
+
+        // Avvio automatico al caricamento
+        window.onload = function () {
+            switchScene(0);
+            lastFrameTime = performance.now();
+            requestAnimationFrame(animationLoop);
+        };
+    </script>
+</body>
+</html>
