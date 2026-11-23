@@ -199,13 +199,151 @@
             font-family: 'Playfair Display', serif;
         }
 
+        /* --- PERSONAGGIO MIGLIORATO (SOLO SCENA 1) --- */
+        .character {
+            width: 140px;
+            height: 175px;
+            position: relative;
+            margin: 0 auto 12px;
+            animation: float 4s ease-in-out infinite;
+            transform-origin: center bottom;
+        }
+
+        .hair-back {
+            width: 140px;
+            height: 150px;
+            background: #392638;
+            border-radius: 70px 70px 30px 30px;
+            position: absolute;
+            left: 0;
+            top: 10px;
+            z-index: 1;
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.45);
+        }
+
+        .face {
+            width: 100px;
+            height: 110px;
+            background: #ffe0d1;
+            border-radius: 50px 50px 45px 45px;
+            position: absolute;
+            left: 20px;
+            top: 25px;
+            z-index: 2;
+            box-shadow: inset 0 -8px 0 #f0c8b6;
+        }
+
+        .hair-front {
+            width: 130px;
+            height: 50px;
+            background: #392638;
+            border-radius: 65px 65px 0 0;
+            position: absolute;
+            left: 5px;
+            top: 10px;
+            z-index: 3;
+        }
+
+        .hair-bang {
+            width: 60px;
+            height: 35px;
+            background: #392638;
+            border-radius: 0 0 50px 0;
+            position: absolute;
+            left: 5px;
+            top: 40px;
+            z-index: 3;
+        }
+
+        .eyes {
+            position: absolute;
+            top: 45px;
+            left: 22px;
+            display: flex;
+            gap: 36px;
+            z-index: 4;
+        }
+
+        .eyes span {
+            background: #35232b;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            animation: blink 4s infinite;
+        }
+
+        @keyframes blink {
+            0%, 96%, 100% { transform: scaleY(1); }
+            98% { transform: scaleY(0.1); }
+        }
+
+        .blush {
+            position: absolute;
+            top: 55px;
+            left: 10px;
+            display: flex;
+            gap: 56px;
+            z-index: 3;
+        }
+
+        .blush span {
+            background: #ffb6c188;
+            width: 12px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .mouth {
+            position: absolute;
+            top: 65px;
+            left: 42px;
+            width: 16px;
+            height: 8px;
+            border-bottom: 2.5px solid #d47e8e;
+            border-radius: 50%;
+            z-index: 4;
+            transition: all 0.35s ease;
+        }
+
+        .mouth.sad {
+            border-bottom: none;
+            border-top: 2.5px solid #d47e8e;
+            top: 70px;
+        }
+
+        .neck {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background: #f0c8b6;
+            left: 55px;
+            top: 120px;
+            z-index: 1;
+        }
+
+        .dress {
+            position: absolute;
+            top: 140px;
+            left: 15px;
+            width: 110px;
+            height: 55px;
+            background: linear-gradient(135deg, #b94c70, #8a3652);
+            border-radius: 40px 40px 10px 10px;
+            z-index: 4;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) scale(0.82); }
+            50% { transform: translateY(-10px) scale(0.82); }
+        }
+
         /* --- SCENA 1: HOOK NOTIFICA --- */
         .notification-stack {
             width: 100%;
             display: flex;
             flex-direction: column;
-            gap: 12px;
-            margin-bottom: 28px;
+            gap: 10px;
+            margin-bottom: 20px;
         }
 
         .notif-card {
@@ -213,7 +351,7 @@
             backdrop-filter: blur(12px);
             border: 1px solid rgba(232, 161, 179, 0.35);
             border-radius: 18px;
-            padding: 14px 16px;
+            padding: 12px 15px;
             text-align: left;
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.45);
             opacity: 0;
@@ -242,7 +380,7 @@
 
         .hook-title {
             font-family: 'Playfair Display', serif;
-            font-size: 32px;
+            font-size: 30px;
             line-height: 1.15;
             font-weight: 700;
             color: var(--white);
@@ -261,120 +399,22 @@
             font-style: italic;
         }
 
-        /* --- PERSONAGGIO CSS IDENTICO ALL'APP --- */
-        .character-wrapper {
-            position: relative;
-            width: 140px;
-            height: 170px;
-            margin: 0 auto 14px;
-            animation: floatChar 3.5s ease-in-out infinite;
-        }
-
-        .char-hair {
-            width: 118px;
-            height: 132px;
-            background: #392638;
-            border-radius: 50% 50% 35% 35%;
-            position: absolute;
-            left: 11px;
-            top: 4px;
-            z-index: 1;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
-        }
-
-        .char-face {
-            width: 104px;
-            height: 118px;
-            background: #eab59f;
-            border-radius: 48% 48% 45% 45%;
-            position: absolute;
-            left: 18px;
-            top: 14px;
-            z-index: 2;
-        }
-
-        .char-eyes {
-            position: absolute;
-            top: 52px;
-            left: 34px;
-            display: flex;
-            gap: 30px;
-            z-index: 3;
-        }
-
-        .char-eyes span {
-            background: #35232b;
-            width: 7px;
-            height: 7px;
-            border-radius: 50%;
-            animation: blink 4s infinite;
-        }
-
-        @keyframes blink {
-            0%, 96%, 100% { transform: scaleY(1); }
-            98% { transform: scaleY(0.1); }
-        }
-
-        .char-mouth {
-            position: absolute;
-            top: 80px;
-            left: 49px;
-            width: 22px;
-            height: 10px;
-            border-bottom: 2px solid #914e5b;
-            border-radius: 50%;
-            z-index: 3;
-            transition: all 0.4s ease;
-        }
-
-        .char-mouth.sad {
-            border-bottom: none;
-            border-top: 2px solid #914e5b;
-            top: 84px;
-        }
-
-        .char-neck {
-            position: absolute;
-            width: 32px;
-            height: 36px;
-            background: #eab59f;
-            left: 54px;
-            top: 118px;
-            z-index: 1;
-        }
-
-        .char-dress {
-            position: absolute;
-            top: 136px;
-            left: 14px;
-            width: 112px;
-            height: 68px;
-            background: #a44f70;
-            border-radius: 36px 36px 12px 12px;
-            z-index: 2;
-        }
-
-        @keyframes floatChar {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-
         /* --- SCENA 2: TENSIONE & PAROLE CHIAVE --- */
         .keywords-ticker {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            gap: 8px;
-            margin: 16px 0 22px;
+            gap: 10px;
+            margin: 0 0 28px;
         }
 
         .kw-pill {
             background: rgba(185, 76, 112, 0.25);
             border: 1px solid rgba(232, 161, 179, 0.4);
             color: #f2a8bd;
-            padding: 6px 13px;
+            padding: 8px 16px;
             border-radius: 999px;
-            font-size: 11px;
+            font-size: 12px;
             font-weight: 800;
             letter-spacing: 1.2px;
             opacity: 0.25;
@@ -569,9 +609,23 @@
         </div>
 
         <!-- ==========================================
-             SCENA 1: HOOK D'IMPATTO (0 - 4.5s)
+             SCENA 1: ICONA FEMMINILE + HOOK NOTIFICA (0 - 4.5s)
              ========================================== -->
         <section class="scene active" id="scene-0">
+            <!-- Icona femminile migliorata presente SOLO all'inizio -->
+            <div class="character">
+                <div class="hair-back"></div>
+                <div class="hair-front"></div>
+                <div class="hair-bang"></div>
+                <div class="neck"></div>
+                <div class="face">
+                    <div class="eyes"><span></span><span></span></div>
+                    <div class="blush"><span></span><span></span></div>
+                    <div class="mouth" id="charMouth"></div>
+                </div>
+                <div class="dress"></div>
+            </div>
+
             <div class="notification-stack">
                 <div class="notif-card" id="notif-1">
                     <div class="flex items-center justify-between text-[11px] text-[#e8a1b3] font-bold mb-1">
@@ -597,18 +651,9 @@
         </section>
 
         <!-- ==========================================
-             SCENA 2: TENSIONE & CONSAPEVOLEZZA (4.5 - 9s)
+             SCENA 2: TENSIONE & PAROLE CHIAVE (4.5 - 9s)
              ========================================== -->
         <section class="scene" id="scene-1">
-            <div class="character-wrapper">
-                <div class="char-hair"></div>
-                <div class="char-face"></div>
-                <div class="char-eyes"><span></span><span></span></div>
-                <div class="char-mouth sad"></div>
-                <div class="char-neck"></div>
-                <div class="char-dress"></div>
-            </div>
-
             <div class="keywords-ticker" id="keywordsBox">
                 <span class="kw-pill" data-kw="0">CONTROLLO</span>
                 <span class="kw-pill" data-kw="1">ISOLAMENTO</span>
@@ -616,10 +661,10 @@
                 <span class="kw-pill" data-kw="3">RICATTO EMOTIVO</span>
             </div>
 
-            <h2 class="serif text-2xl sm:text-3xl font-bold leading-tight text-[#fff4f5] mb-3">
+            <h2 class="serif text-3xl sm:text-4xl font-bold leading-tight text-[#fff4f5] mb-4">
                 La violenza non inizia sempre con uno schiaffo.
             </h2>
-            <p class="text-sm text-[#c5b5c6] leading-relaxed max-w-xs">
+            <p class="text-base text-[#c5b5c6] leading-relaxed max-w-xs">
                 A volte comincia con un divieto presentato come protezione.
             </p>
         </section>
@@ -728,16 +773,20 @@
         async function toggleAudio() {
             const btn = document.getElementById("audioToggleBtn");
             if (!audioEnabled) {
-                await Tone.start();
-                synth = new Tone.PolySynth(Tone.Synth, {
-                    oscillator: { type: "sine" },
-                    envelope: { attack: 0.02, decay: 0.2, sustain: 0.1, release: 0.8 }
-                }).toDestination();
-                synth.volume.value = -10;
-                audioEnabled = true;
-                btn.innerText = "🔊 Audio On";
-                btn.classList.add("bg-[#b94c70]/40", "border-[#e8a1b3]");
-                playSound("notif");
+                try {
+                    await Tone.start();
+                    synth = new Tone.PolySynth(Tone.Synth, {
+                        oscillator: { type: "sine" },
+                        envelope: { attack: 0.02, decay: 0.2, sustain: 0.1, release: 0.8 }
+                    }).toDestination();
+                    synth.volume.value = -10;
+                    audioEnabled = true;
+                    btn.innerText = "🔊 Audio On";
+                    btn.classList.add("bg-[#b94c70]/40", "border-[#e8a1b3]");
+                    playSound("notif");
+                } catch (e) {
+                    console.warn("Audio non disponibile:", e);
+                }
             } else {
                 audioEnabled = false;
                 btn.innerText = "🔇 Audio Off";
@@ -768,6 +817,7 @@
         let sceneElapsed = 0;
         let isPlaying = true;
         let lastFrameTime = performance.now();
+        let animationFrameId = null;
 
         // Flag per evitare trigger ripetuti all'interno della stessa scena
         let triggers = {};
@@ -778,9 +828,11 @@
                 const n1 = document.getElementById("notif-1");
                 const n2 = document.getElementById("notif-2");
                 const ht = document.getElementById("hook-text");
+                const mouth = document.getElementById("charMouth");
                 n1.classList.remove("pop", "shake");
                 n2.classList.remove("pop", "shake");
                 ht.classList.remove("visible");
+                mouth.classList.remove("sad");
             } else if (sceneIdx === 1) {
                 document.querySelectorAll(".kw-pill").forEach(el => el.classList.remove("lit"));
             } else if (sceneIdx === 2) {
@@ -813,8 +865,13 @@
             if (currentScene === 3) playSound("heart");
         }
 
+        function jumpToScene(idx) {
+            switchScene(idx);
+            if (!isPlaying) togglePlay();
+        }
+
         function runSceneChoreography(sceneIdx, t) {
-            // SCENA 1: Notifiche a cascata + Testo Hook
+            // SCENA 1: Notifiche a cascata + Espressione personaggio + Testo Hook
             if (sceneIdx === 0) {
                 if (t > 250 && !triggers.n1) {
                     triggers.n1 = true;
@@ -824,6 +881,7 @@
                 if (t > 1300 && !triggers.n2) {
                     triggers.n2 = true;
                     document.getElementById("notif-2").classList.add("pop", "shake");
+                    document.getElementById("charMouth").classList.add("sad");
                     playSound("notif");
                 }
                 if (t > 2300 && !triggers.hook) {
@@ -891,49 +949,48 @@
                 }
             }
 
-            requestAnimationFrame(animationLoop);
+            animationFrameId = requestAnimationFrame(animationLoop);
         }
 
-        /* --- CONTROLLI UTENTE --- */
+        /* --- AZIONI DI CONTROLLO INTERFACCIA --- */
         function togglePlay() {
             isPlaying = !isPlaying;
             const btn = document.getElementById("playPauseBtn");
-            btn.innerHTML = isPlaying ? "⏸ Pausa" : "▶ Riprendi";
+            if (isPlaying) {
+                btn.innerHTML = "⏸ Pausa";
+                lastFrameTime = performance.now();
+                animationFrameId = requestAnimationFrame(animationLoop);
+            } else {
+                btn.innerHTML = "▶️ Play";
+                cancelAnimationFrame(animationFrameId);
+            }
         }
 
         function restartVideo() {
-            isPlaying = true;
-            document.getElementById("playPauseBtn").innerHTML = "⏸ Pausa";
             switchScene(0);
+            if (!isPlaying) togglePlay();
         }
 
-        function jumpToScene(idx) {
-            isPlaying = true;
-            document.getElementById("playPauseBtn").innerHTML = "⏸ Pausa";
-            switchScene(idx);
-        }
-
+        let recordingMode = false;
         function toggleRecordingMode() {
-            document.body.classList.toggle("recording-mode");
-            restartVideo();
+            recordingMode = !recordingMode;
+            if (recordingMode) {
+                document.body.classList.add('recording-mode');
+                restartVideo();
+            } else {
+                document.body.classList.remove('recording-mode');
+            }
         }
 
-        // Uscita dalla modalità registrazione con tasto ESC
-        document.addEventListener("keydown", (e) => {
-            if (e.key === "Escape") {
-                document.body.classList.remove("recording-mode");
-            } else if (e.code === "Space") {
-                e.preventDefault();
-                togglePlay();
+        // Ascolta il tasto ESC per uscire dalla modalità registrazione
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && recordingMode) {
+                toggleRecordingMode();
             }
         });
 
-        // Avvio automatico al caricamento
-        window.onload = function () {
-            switchScene(0);
-            lastFrameTime = performance.now();
-            requestAnimationFrame(animationLoop);
-        };
+        // Avvio ciclo
+        animationFrameId = requestAnimationFrame(animationLoop);
     </script>
 </body>
 </html>
