@@ -435,11 +435,101 @@
             width: 100%;
             background: linear-gradient(145deg, #30263c, #211b2b);
             border: 1px solid rgba(255, 255, 255, 0.16);
-            border-radius: 22px;
-            padding: 20px 18px;
+            border-radius: 20px;
+            padding: 15px 14px;
             text-align: left;
             box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
             position: relative;
+        }
+
+        .mock-option {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            border-radius: 12px;
+            padding: 9px 12px;
+            font-size: 12px;
+            line-height: 1.35;
+            color: var(--white);
+            margin-top: 7px;
+            transition: all 0.35s ease;
+            position: relative;
+        }
+
+        .mock-option.selected-wrong {
+            background: rgba(185, 76, 112, 0.38);
+            border-color: var(--pink);
+            transform: scale(1.015);
+            box-shadow: 0 0 18px rgba(185, 76, 112, 0.3);
+        }
+
+        .mock-option.selected-correct {
+            background: rgba(57, 125, 99, 0.38);
+            border-color: var(--green-light);
+            transform: scale(1.015);
+            box-shadow: 0 0 20px rgba(115, 198, 162, 0.28);
+        }
+
+        .mock-option.dimmed {
+            opacity: 0.42;
+        }
+
+        .mock-feedback {
+            margin-top: 10px;
+            background: rgba(255, 255, 255, 0.07);
+            border-left: 3px solid var(--pink);
+            padding: 9px 11px;
+            border-radius: 8px;
+            font-size: 11.5px;
+            line-height: 1.4;
+            color: var(--white);
+            opacity: 0;
+            transform: translateY(6px);
+            transition: all 0.35s ease;
+        }
+
+        .mock-feedback.reflect {
+            background: rgba(185, 76, 112, 0.18);
+            border-left-color: var(--pink);
+        }
+
+        .mock-feedback.success {
+            background: rgba(115, 198, 162, 0.16);
+            border-left-color: var(--green-light);
+        }
+
+        .mock-feedback.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Cursore/Tocco animato */
+        .touch-cursor {
+            position: absolute;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(255, 244, 245, 0.35);
+            border: 2px solid var(--white);
+            box-shadow: 0 0 15px rgba(232, 161, 179, 0.8);
+            pointer-events: none;
+            z-index: 25;
+            right: 22px;
+            bottom: 16px;
+            opacity: 0;
+            transition: all 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .touch-cursor::after {
+            content: '👆';
+            position: absolute;
+            font-size: 19px;
+            top: 7px;
+            left: 7px;
+        }
+
+        .touch-cursor.tap-pulse {
+            transform: scale(0.75);
+            background: rgba(232, 161, 179, 0.85);
         }
 
         .mock-option {
@@ -670,37 +760,38 @@
         </section>
 
         <!-- ==========================================
-             SCENA 3: ANTEPRIMA INTERATTIVA QUIZ (9 - 14.5s)
+             SCENA 3: ANTEPRIMA INTERATTIVA QUIZ (9 - 18.5s)
              ========================================== -->
         <section class="scene" id="scene-2">
-            <span class="inline-block bg-[#b94c70]/30 text-[#f2a8bd] text-[11px] font-bold tracking-widest px-3 py-1 rounded-full mb-3 border border-[#e8a1b3]/30">
+            <span class="inline-block bg-[#b94c70]/30 text-[#f2a8bd] text-[10px] font-bold tracking-widest px-3 py-1 rounded-full mb-2 border border-[#e8a1b3]/30">
                 METTITI ALLA PROVA · 1 MINUTO
             </span>
 
-            <h2 class="serif text-2xl font-bold text-white mb-4">
+            <h2 class="serif text-xl font-bold text-white mb-2.5">
                 Sai riconoscere i segnali?
             </h2>
 
             <div class="quiz-mockup">
                 <div class="text-[10px] uppercase tracking-widest text-[#e8a1b3] font-bold mb-1">
-                    SITUAZIONE 3 DI 5 · PRIVACY
+                    SITUAZIONE 3 DI 5 · GELOSIA
                 </div>
-                <div class="serif text-base font-semibold text-white leading-snug mb-3">
-                    «Il partner pretende le password dei social. È accettabile?»
+                <div class="serif text-[14px] font-semibold text-white leading-snug mb-2">
+                    Il partner controlla il telefono, legge le chat e pretende le password dei social. Dice che in una coppia non devono esistere segreti. È accettabile?
                 </div>
 
-                <div class="mock-option" id="opt-wrong">
+                <div class="mock-option" id="opt-0">
                     Sì, se non hai niente da nascondere.
                 </div>
 
-                <div class="mock-option" id="opt-right">
-                    No. La privacy e i confini personali restano importanti.
+                <div class="mock-option" id="opt-1">
+                    No. La privacy e il rispetto dei confini personali restano importanti anche in coppia.
                 </div>
 
-                <div class="mock-feedback" id="mock-fb">
-                    <strong class="text-[#73c6a2]">✓ Hai individuato il segnale.</strong><br>
-                    L'affetto non dà mai diritto alla sorveglianza.
+                <div class="mock-option" id="opt-2">
+                    Dipende da quanto è geloso.
                 </div>
+
+                <div class="mock-feedback" id="mock-fb"></div>
 
                 <!-- Cursore animato che simula il tap -->
                 <div class="touch-cursor" id="touchCursor"></div>
@@ -802,6 +893,8 @@
                     synth.triggerAttackRelease(["E5", "B5"], "16n", now);
                 } else if (type === "keyword") {
                     synth.triggerAttackRelease("C3", "32n", now);
+                } else if (type === "wrong") {
+                    synth.triggerAttackRelease(["Eb4", "Bb3"], "8n", now);
                 } else if (type === "success") {
                     synth.triggerAttackRelease(["C5", "E5", "G5"], "8n", now);
                 } else if (type === "heart") {
@@ -811,8 +904,8 @@
         }
 
         /* --- TIMELINE E GESTIONE SCENE --- */
-        // Durata in millisecondi di ciascuna delle 4 scene (Totale: 19.5 secondi)
-        const sceneDurations = [4500, 4500, 5500, 5000];
+        // Durata in millisecondi di ciascuna delle 4 scene (Scena 3 e 4 allungate per una lettura comoda)
+        const sceneDurations = [4500, 4500, 13000, 6500];
         let currentScene = 0;
         let sceneElapsed = 0;
         let isPlaying = true;
@@ -836,12 +929,20 @@
             } else if (sceneIdx === 1) {
                 document.querySelectorAll(".kw-pill").forEach(el => el.classList.remove("lit"));
             } else if (sceneIdx === 2) {
-                document.getElementById("opt-right").classList.remove("selected-correct");
-                document.getElementById("opt-wrong").classList.remove("dimmed");
-                document.getElementById("mock-fb").classList.remove("show");
+                [0, 1, 2].forEach(i => {
+                    const opt = document.getElementById(`opt-${i}`);
+                    if (opt) opt.classList.remove("selected-wrong", "selected-correct", "dimmed");
+                });
+                const fb = document.getElementById("mock-fb");
+                fb.className = "mock-feedback";
+                fb.innerHTML = "";
                 const cursor = document.getElementById("touchCursor");
                 cursor.style.opacity = "0";
-                cursor.style.transform = "translate(0, 0) scale(1)";
+                cursor.style.top = "";
+                cursor.style.left = "";
+                cursor.style.right = "22px";
+                cursor.style.bottom = "16px";
+                cursor.style.transform = "scale(1)";
                 cursor.classList.remove("tap-pulse");
             }
         }
@@ -871,7 +972,7 @@
         }
 
         function runSceneChoreography(sceneIdx, t) {
-            // SCENA 1: Notifiche a cascata + Espressione personaggio + Testo Hook
+            // SCENA 1: Notifiche a cascata, cambio espressione volto + Testo Hook
             if (sceneIdx === 0) {
                 if (t > 250 && !triggers.n1) {
                     triggers.n1 = true;
@@ -903,26 +1004,63 @@
                 });
             }
 
-            // SCENA 3: Movimento cursore e selezione risposta corretta
+            // SCENA 3: Doppia interazione (1. Errore + Riflessione -> 2. Risposta Corretta)
             if (sceneIdx === 2) {
                 const cursor = document.getElementById("touchCursor");
-                if (t > 1200 && !triggers.cursorShow) {
-                    triggers.cursorShow = true;
+                const opt0 = document.getElementById("opt-0");
+                const opt1 = document.getElementById("opt-1");
+                const opt2 = document.getElementById("opt-2");
+                const fb = document.getElementById("mock-fb");
+                const explanationText = "La condivisione delle password non deve essere imposta. La sorveglianza e l'invasione della privacy possono essere segnali di una relazione di controllo.";
+
+                // Fase 1A: Il cursore si sposta sulla prima risposta (errata)
+                if (t > 800 && !triggers.moveWrong) {
+                    triggers.moveWrong = true;
                     cursor.style.opacity = "1";
-                    cursor.style.transform = "translate(-75px, -85px)";
+                    cursor.style.bottom = "235px";
+                    cursor.style.right = "65px";
                 }
-                if (t > 2100 && !triggers.cursorTap) {
-                    triggers.cursorTap = true;
+                // Fase 1B: Tap sulla risposta errata
+                if (t > 1600 && !triggers.tapWrong) {
+                    triggers.tapWrong = true;
                     cursor.classList.add("tap-pulse");
-                    document.getElementById("opt-right").classList.add("selected-correct");
-                    document.getElementById("opt-wrong").classList.add("dimmed");
+                    opt0.classList.add("selected-wrong");
+                    opt1.classList.add("dimmed");
+                    opt2.classList.add("dimmed");
+                    playSound("wrong");
+                }
+                // Fase 1C: Comparsa box "Fermiamoci a riflettere"
+                if (t > 1950 && !triggers.showReflect) {
+                    triggers.showReflect = true;
+                    cursor.classList.remove("tap-pulse");
+                    fb.innerHTML = `<strong class="text-[#f2a8bd]">💡 Fermiamoci a riflettere.</strong><br>${explanationText}`;
+                    fb.className = "mock-feedback reflect show";
+                }
+
+                // Fase 2A: Il cursore si sposta sulla seconda risposta (corretta) dopo più tempo per la lettura
+                if (t > 7500 && !triggers.moveCorrect) {
+                    triggers.moveCorrect = true;
+                    cursor.style.bottom = "175px";
+                    cursor.style.right = "55px";
+                }
+                // Fase 2B: Tap sulla risposta corretta
+                if (t > 8300 && !triggers.tapCorrect) {
+                    triggers.tapCorrect = true;
+                    cursor.classList.add("tap-pulse");
+                    opt0.classList.remove("selected-wrong");
+                    opt0.classList.add("dimmed");
+                    opt1.classList.remove("dimmed");
+                    opt1.classList.add("selected-correct");
+                    opt2.classList.add("dimmed");
                     playSound("success");
                 }
-                if (t > 2500 && !triggers.showFb) {
-                    triggers.showFb = true;
+                // Fase 2C: Aggiornamento box feedback in conferma
+                if (t > 8650 && !triggers.showSuccess) {
+                    triggers.showSuccess = true;
                     cursor.classList.remove("tap-pulse");
                     cursor.style.opacity = "0";
-                    document.getElementById("mock-fb").classList.add("show");
+                    fb.innerHTML = `<strong class="text-[#73c6a2]">✓ Hai individuato il segnale.</strong><br>${explanationText}`;
+                    fb.className = "mock-feedback success show";
                 }
             }
         }
