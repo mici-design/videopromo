@@ -43,13 +43,13 @@
             overflow-x: hidden;
         }
 
-        /* Contenitore 9:16 perfetto per Reels / Stories / Screen Recording */
+        /* Contenitore 9:16 perfetto per IG Stories / Reels / Screen Recording */
         .video-stage {
             position: relative;
-            width: 100%;
-            max-width: 405px; /* Proporzione 9:16 su 720px di altezza */
-            height: 720px;
-            max-height: 88vh;
+            height: 86vh;
+            max-height: 820px;
+            width: auto;
+            max-width: 94vw;
             aspect-ratio: 9 / 16;
             background: 
                 radial-gradient(circle at 15% 20%, #75425b66, transparent 45%),
@@ -62,12 +62,13 @@
             flex-direction: column;
         }
 
-        /* Su mobile occupa tutto lo schermo */
+        /* Su mobile mantiene la proporzione verticale 9:16 */
         @media (max-width: 480px) {
             .video-stage {
-                max-width: 100vw;
-                height: 100dvh;
+                width: 100vw;
+                height: auto;
                 max-height: 100dvh;
+                aspect-ratio: 9 / 16;
                 border-radius: 0;
                 box-shadow: none;
             }
@@ -83,14 +84,16 @@
             }
         }
 
-        /* Modalità schermo intero pulita per registrazione */
+        /* Modalità schermo intero pulita per registrazione IG Stories 9:16 */
         body.recording-mode .controls-bar,
         body.recording-mode .header-info {
             display: none !important;
         }
         body.recording-mode .video-stage {
-            max-height: 96vh;
-            height: 96vh;
+            height: 98vh;
+            max-height: 98vh;
+            width: auto;
+            aspect-ratio: 9 / 16;
         }
 
         /* Particelle fluttuanti identiche all'app */
@@ -141,35 +144,24 @@
         .ig-header {
             position: absolute;
             top: 26px;
-            left: 16px;
-            right: 16px;
+            left: 14px;
+            right: 14px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             z-index: 30;
         }
 
-        .brand-pill {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 12px;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-            color: var(--white);
-            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
-        }
-
-        .brand-dot {
-            width: 26px;
-            height: 26px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #d77896, #a64a73);
+        /* Badge Branding MediaVox Magazine */
+        .mediavox-branding {
+            background: rgba(255, 255, 255, 0.96);
+            padding: 4px 10px 3px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.45);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 13px;
-            box-shadow: 0 0 12px rgba(215, 120, 150, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.6);
         }
 
         /* Scene */
@@ -532,79 +524,6 @@
             background: rgba(232, 161, 179, 0.85);
         }
 
-        .mock-option {
-            background: rgba(255, 255, 255, 0.06);
-            border: 1px solid rgba(255, 255, 255, 0.16);
-            border-radius: 13px;
-            padding: 12px 14px;
-            font-size: 13px;
-            line-height: 1.4;
-            color: var(--white);
-            margin-top: 10px;
-            transition: all 0.35s ease;
-            position: relative;
-        }
-
-        .mock-option.selected-correct {
-            background: rgba(57, 125, 99, 0.35);
-            border-color: var(--green-light);
-            transform: scale(1.02);
-            box-shadow: 0 0 20px rgba(115, 198, 162, 0.25);
-        }
-
-        .mock-option.dimmed {
-            opacity: 0.45;
-        }
-
-        .mock-feedback {
-            margin-top: 12px;
-            background: rgba(115, 198, 162, 0.14);
-            border-left: 3px solid var(--green-light);
-            padding: 10px 12px;
-            border-radius: 8px;
-            font-size: 12.5px;
-            line-height: 1.45;
-            color: var(--white);
-            opacity: 0;
-            transform: translateY(8px);
-            transition: all 0.4s ease;
-        }
-
-        .mock-feedback.show {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* Cursore/Tocco animato */
-        .touch-cursor {
-            position: absolute;
-            width: 34px;
-            height: 34px;
-            border-radius: 50%;
-            background: rgba(255, 244, 245, 0.35);
-            border: 2px solid var(--white);
-            box-shadow: 0 0 15px rgba(232, 161, 179, 0.8);
-            pointer-events: none;
-            z-index: 25;
-            right: 25px;
-            bottom: 20px;
-            opacity: 0;
-            transition: all 0.7s cubic-bezier(0.22, 1, 0.36, 1);
-        }
-
-        .touch-cursor::after {
-            content: '👆';
-            position: absolute;
-            font-size: 20px;
-            top: 8px;
-            left: 8px;
-        }
-
-        .touch-cursor.tap-pulse {
-            transform: scale(0.75);
-            background: rgba(232, 161, 179, 0.8);
-        }
-
         /* --- SCENA 4: CALL TO ACTION FINALE --- */
         .heart-pulse {
             font-size: 58px;
@@ -670,7 +589,7 @@
 
     <!-- Intestazione esterna per chi registra/usa il promo -->
     <div class="header-info text-center mb-3 px-4 hidden sm:block">
-        <span class="text-xs uppercase tracking-widest text-[#e8a1b3] font-bold">Anteprima Video Verticale 9:16 · Reels &amp; TikTok</span>
+        <span class="text-xs uppercase tracking-widest text-[#e8a1b3] font-bold">Anteprima Video Verticale 9:16 · IG Stories &amp; Reels</span>
     </div>
 
     <!-- STAGE VIDEO 9:16 -->
@@ -687,13 +606,23 @@
             <div class="ig-segment" onclick="jumpToScene(3)"><div class="ig-segment-fill" id="prog-3"></div></div>
         </div>
 
-        <!-- Header Storia -->
+        <!-- Header Storia con Branding MediaVox Magazine -->
         <div class="ig-header">
-            <div class="brand-pill">
-                <div class="brand-dot">🔔</div>
-                <span>CAMPANELLI D'ALLARME</span>
+            <div class="mediavox-branding" title="MediaVox Magazine">
+                <svg width="96" height="28" viewBox="0 0 250 72" xmlns="http://www.w3.org/2000/svg" aria-label="MediaVox magazine">
+                    <!-- Testo MediaVox -->
+                    <text x="4" y="45" font-family="'DM Sans', Arial, sans-serif" font-weight="800" font-size="44" letter-spacing="-1.5">
+                        <tspan fill="#c81d25">Media</tspan><tspan fill="#c81d25">V</tspan><tspan fill="#f39200" dx="-4">o</tspan><tspan fill="#2b9ed8" dx="-2">x</tspan>
+                    </text>
+                    <!-- Dettaglio ala destra della V in arancione come nel logo originale -->
+                    <polygon points="154,13 163,13 151,45 144,45" fill="#f39200"/>
+                    <!-- Sottotitolo magazine -->
+                    <text x="128" y="64" text-anchor="middle" font-family="'DM Sans', Arial, sans-serif" font-weight="500" font-size="15" letter-spacing="4.5" fill="#4a4a4a">
+                        magazine
+                    </text>
+                </svg>
             </div>
-            <button id="audioToggleBtn" onclick="toggleAudio()" class="text-xs bg-white/10 hover:bg-white/20 text-white px-2.5 py-1 rounded-full backdrop-blur-md border border-white/20 transition">
+            <button id="audioToggleBtn" onclick="toggleAudio()" class="text-[11px] bg-white/10 hover:bg-white/20 text-white px-2.5 py-1.5 rounded-full backdrop-blur-md border border-white/20 transition">
                 🔇 Audio Off
             </button>
         </div>
@@ -760,7 +689,7 @@
         </section>
 
         <!-- ==========================================
-             SCENA 3: ANTEPRIMA INTERATTIVA QUIZ (9 - 18.5s)
+             SCENA 3: ANTEPRIMA INTERATTIVA QUIZ (9 - 22s)
              ========================================== -->
         <section class="scene" id="scene-2">
             <span class="inline-block bg-[#b94c70]/30 text-[#f2a8bd] text-[10px] font-bold tracking-widest px-3 py-1 rounded-full mb-2 border border-[#e8a1b3]/30">
@@ -799,7 +728,7 @@
         </section>
 
         <!-- ==========================================
-             SCENA 4: CALL TO ACTION FINALE (14.5 - 19.5s)
+             SCENA 4: CALL TO ACTION FINALE (22 - 28.5s)
              ========================================== -->
         <section class="scene" id="scene-3">
             <span class="inline-block bg-[#b94c70]/30 text-[#f2a8bd] text-[11px] font-bold tracking-widest px-3 py-1 rounded-full mb-4">
@@ -904,7 +833,6 @@
         }
 
         /* --- TIMELINE E GESTIONE SCENE --- */
-        // Durata in millisecondi di ciascuna delle 4 scene (Scena 3 e 4 allungate per una lettura comoda)
         const sceneDurations = [4500, 4500, 13000, 6500];
         let currentScene = 0;
         let sceneElapsed = 0;
@@ -912,7 +840,6 @@
         let lastFrameTime = performance.now();
         let animationFrameId = null;
 
-        // Flag per evitare trigger ripetuti all'interno della stessa scena
         let triggers = {};
 
         function resetSceneAnimations(sceneIdx) {
@@ -956,7 +883,6 @@
                 el.classList.toggle("active", idx === currentScene);
             });
 
-            // Aggiorna le barre IG precedenti e successive
             for (let i = 0; i < sceneDurations.length; i++) {
                 const bar = document.getElementById(`prog-${i}`);
                 if (i < currentScene) bar.style.width = "100%";
@@ -1013,14 +939,12 @@
                 const fb = document.getElementById("mock-fb");
                 const explanationText = "La condivisione delle password non deve essere imposta. La sorveglianza e l'invasione della privacy possono essere segnali di una relazione di controllo.";
 
-                // Fase 1A: Il cursore si sposta sulla prima risposta (errata)
                 if (t > 800 && !triggers.moveWrong) {
                     triggers.moveWrong = true;
                     cursor.style.opacity = "1";
                     cursor.style.bottom = "235px";
                     cursor.style.right = "65px";
                 }
-                // Fase 1B: Tap sulla risposta errata
                 if (t > 1600 && !triggers.tapWrong) {
                     triggers.tapWrong = true;
                     cursor.classList.add("tap-pulse");
@@ -1029,7 +953,6 @@
                     opt2.classList.add("dimmed");
                     playSound("wrong");
                 }
-                // Fase 1C: Comparsa box "Fermiamoci a riflettere"
                 if (t > 1950 && !triggers.showReflect) {
                     triggers.showReflect = true;
                     cursor.classList.remove("tap-pulse");
@@ -1037,13 +960,11 @@
                     fb.className = "mock-feedback reflect show";
                 }
 
-                // Fase 2A: Il cursore si sposta sulla seconda risposta (corretta) dopo più tempo per la lettura
                 if (t > 7500 && !triggers.moveCorrect) {
                     triggers.moveCorrect = true;
                     cursor.style.bottom = "175px";
                     cursor.style.right = "55px";
                 }
-                // Fase 2B: Tap sulla risposta corretta
                 if (t > 8300 && !triggers.tapCorrect) {
                     triggers.tapCorrect = true;
                     cursor.classList.add("tap-pulse");
@@ -1054,7 +975,6 @@
                     opt2.classList.add("dimmed");
                     playSound("success");
                 }
-                // Fase 2C: Aggiornamento box feedback in conferma
                 if (t > 8650 && !triggers.showSuccess) {
                     triggers.showSuccess = true;
                     cursor.classList.remove("tap-pulse");
@@ -1081,7 +1001,6 @@
                     if (currentScene < sceneDurations.length - 1) {
                         switchScene(currentScene + 1);
                     } else {
-                        // Loop continuo fluido
                         switchScene(0);
                     }
                 }
@@ -1120,7 +1039,6 @@
             }
         }
 
-        // Ascolta il tasto ESC per uscire dalla modalità registrazione
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape' && recordingMode) {
                 toggleRecordingMode();
